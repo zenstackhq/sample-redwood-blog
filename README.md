@@ -127,6 +127,7 @@ Follow these steps to get started with ZenStack:
     ```diff
     export const deleteComment = ({ id }) => {
     -   requireAuth({ roles: 'moderator' })
+    -   db.comment.delete({ where: { id } })
         return authDb().comment.delete({ where: { id } })
     }
     ```
