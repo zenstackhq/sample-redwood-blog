@@ -18,7 +18,7 @@ Follow these steps to get started with ZenStack:
     cp db/schema.prisma ./schema.zmodel
     ```
 
-2. Prepare model
+1. Prepare model
 
     Add the following section to `schema.zmodel` to output the generated Prisma schema to the default location of Redwood:
 
@@ -35,7 +35,7 @@ Follow these steps to get started with ZenStack:
     yarn zenstack generate
     ```
 
-3. Add access policies
+1. Add access policies
 
     Note the added `@@allow` rules (all operations are denied by default).
 
@@ -93,6 +93,8 @@ Follow these steps to get started with ZenStack:
 
     ```
 
+    See the next section for where the `auth()` function's value comes from.
+
     Rerun generation and migrate the database.
 
     ```bash
@@ -100,7 +102,25 @@ Follow these steps to get started with ZenStack:
     yarn rw prisma migrate dev
     ```
 
-4. Switch to relying on access policies for authorization
+1. Create access-policy-enhanced Prisma Client
+
+    Add the following function to `api/src/lib/db.js`:
+
+    ```js
+    import { withPolicy } from '@zenstackhq/runtime'
+
+    /*
+     * Returns ZenStack wrapped Prisma Client with access policies enabled.
+     */
+    export function authDb() {
+      console.log('Context User:', context.currentUser)
+      return withPolicy(db, { user: context.currentUser })
+    }
+    ```
+
+    It uses the `withPolicy` API to create a Prisma Client wrapper (note the `context.currentUser` is passed in as the current user, which determines what the `auth()` function returns in the ZModel policy rules).
+
+1. Switch to relying on access policies for authorization
 
     Remove authorization from `api/src/services/comments.js`
 
@@ -136,7 +156,7 @@ Follow these steps to get started with ZenStack:
     -)}
     ```
 
-5. Test it
+1. Test it
 
     Now if you delete a comment with a moderator role, it should succeed. A failure will be generated for other roles.
 
