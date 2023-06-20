@@ -106,7 +106,7 @@ Follow these steps to get started with ZenStack:
 
     ```diff
     export const deleteComment = ({ id }) => {
-        - requireAuth({ roles: 'moderator' })
+    -   requireAuth({ roles: 'moderator' })
         return authDb().comment.delete({ where: { id } })
     }
     ```
@@ -115,10 +115,10 @@ Follow these steps to get started with ZenStack:
 
     ```diff
     type Mutation {
-        - createComment(input: CreateCommentInput!): Comment! @skipAuth
-        - deleteComment(id: Int!): Comment! @requireAuth(roles: "moderator")
-        + createComment(input: CreateCommentInput!): Comment! @skipAuth
-        + deleteComment(id: Int!): Comment! @skipAuth
+    -   createComment(input: CreateCommentInput!): Comment! @skipAuth
+    -   deleteComment(id: Int!): Comment! @requireAuth(roles: "moderator")
+    +   createComment(input: CreateCommentInput!): Comment! @skipAuth
+    +   deleteComment(id: Int!): Comment! @skipAuth
     }
     ```
 
