@@ -17,11 +17,6 @@ export const createComment = ({ input }) => {
 }
 
 export const deleteComment = ({ id }) => {
-  // instead of checking roles explicitly, we now rely on the
-  // access policies to authorize the operation
-  //
-  //     requireAuth({ roles: 'moderator' })
-  //
   return authDb().comment.delete({
     where: { id },
   })
@@ -29,8 +24,6 @@ export const deleteComment = ({ id }) => {
 
 export const Comment = {
   post: (_obj, { root }) => {
-    return authDb()
-      .comment.findUnique({ where: { id: root?.id } })
-      .post()
+    return authDb().post.findUnique({ where: { id: root?.postId } })
   },
 }

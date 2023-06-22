@@ -35,6 +35,28 @@ export const updatePost = async ({ id, input }) => {
   })
 }
 
+export const publishPost = async ({ id }) => {
+  await validateOwnership({ id })
+
+  return db.post.update({
+    where: { id },
+    data: {
+      published: true,
+    },
+  })
+}
+
+export const unpublishPost = async ({ id }) => {
+  await validateOwnership({ id })
+
+  return db.post.update({
+    where: { id },
+    data: {
+      published: false,
+    },
+  })
+}
+
 export const deletePost = async ({ id }) => {
   await validateOwnership({ id })
 

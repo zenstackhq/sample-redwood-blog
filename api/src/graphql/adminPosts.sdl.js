@@ -18,6 +18,8 @@ export const schema = gql`
     createPost(input: CreatePostInput!): Post! @requireAuth(roles: ["admin"])
     updatePost(id: Int!, input: UpdatePostInput!): Post!
       @requireAuth(roles: ["admin"])
+    publishPost(id: Int!): Post! @requireAuth(roles: ["admin"])
+    unpublishPost(id: Int!): Post! @requireAuth(roles: ["admin"])
     deletePost(id: Int!): Post! @requireAuth(roles: ["admin"])
   }
 `

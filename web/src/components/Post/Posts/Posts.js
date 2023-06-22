@@ -1,12 +1,28 @@
+import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
-import { Link, routes } from '@redwoodjs/router'
 
 import { QUERY } from 'src/components/Post/PostsCell'
 
 const DELETE_POST_MUTATION = gql`
   mutation DeletePostMutation($id: Int!) {
     deletePost(id: $id) {
+      id
+    }
+  }
+`
+
+const PUBLISH_POST_MUTATION = gql`
+  mutation PublishPostMutation($id: Int!) {
+    publishPost(id: $id) {
+      id
+    }
+  }
+`
+
+const UNPUBLISH_POST_MUTATION = gql`
+  mutation UnpublishPostMutation($id: Int!) {
+    unpublishPost(id: $id) {
       id
     }
   }
@@ -50,6 +66,36 @@ const PostsList = ({ posts }) => {
     awaitRefetchQueries: true,
   })
 
+  const [publishPost] = useMutation(PUBLISH_POST_MUTATION, {
+    onCompleted: () => {
+      toast.success('Post published')
+    },
+    // This refetches the query on the list page. Read more about other ways to
+    // update the cache over here:
+    // https://www.apollographql.com/docs/react/data/mutations/#making-all-other-cache-updates
+    refetchQueries: [{ query: QUERY }],
+    awaitRefetchQueries: true,
+  })
+
+  const [unpublishPost] = useMutation(UNPUBLISH_POST_MUTATION, {
+    onCompleted: () => {
+      toast.success('Post unpublished')
+    },
+    // This refetches the query on the list page. Read more about other ways to
+    // update the cache over here:
+    // https://www.apollographql.com/docs/react/data/mutations/#making-all-other-cache-updates
+    refetchQueries: [{ query: QUERY }],
+    awaitRefetchQueries: true,
+  })
+
+  const onPublishClick = (id) => {
+    publishPost({ variables: { id } })
+  }
+
+  const onUnpublishClick = (id) => {
+    unpublishPost({ variables: { id } })
+  }
+
   const onDeleteClick = (id) => {
     if (confirm('Are you sure you want to delete post ' + id + '?')) {
       deletePost({ variables: { id } })
@@ -91,6 +137,26 @@ const PostsList = ({ posts }) => {
                   >
                     Edit
                   </Link>
+                  {post.published && (
+                    <a
+                      href="#"
+                      title={'Unpublish post ' + post.id}
+                      className="rw-button rw-button-small rw-button-red"
+                      onClick={() => onUnpublishClick(post.id)}
+                    >
+                      Unpublish
+                    </a>
+                  )}
+                  {!post.published && (
+                    <a
+                      href="#"
+                      title={'Publish post ' + post.id}
+                      className="rw-button rw-button-small rw-button-red"
+                      onClick={() => onPublishClick(post.id)}
+                    >
+                      Publish
+                    </a>
+                  )}
                   <a
                     href="#"
                     title={'Delete post ' + post.id}

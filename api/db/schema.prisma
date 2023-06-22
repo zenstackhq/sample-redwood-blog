@@ -11,11 +11,11 @@ datasource db {
 generator client {
     provider = "prisma-client-js"
     binaryTargets = "native"
+    previewFeatures = ["interactiveTransactions"]
 }
 
-/// @@allow('read', true)
-/// @@allow('all', auth() == user)
-/// @@allow('all', auth() != null && auth().roles == 'admin')
+/// @@allow('all', auth().roles == 'admin' && auth() == user)
+/// @@allow('read', published)
 model Post {
     id Int @id() @default(autoincrement())
     title String
@@ -24,6 +24,7 @@ model Post {
     user User @relation(fields: [userId], references: [id])
     userId Int
     createdAt DateTime @default(now())
+    published Boolean @default(true)
 
     zenstack_guard Boolean @default(true)
     zenstack_transaction String?
@@ -39,8 +40,6 @@ model Contact {
     createdAt DateTime @default(now())
 }
 
-/// @@allow('create,read', true)
-/// @@allow('update,delete', auth() == this)
 model User {
     id Int @id() @default(autoincrement())
     name String?
@@ -58,8 +57,8 @@ model User {
     @@index([zenstack_transaction])
 }
 
-/// @@allow('read,create', true)
-/// @@allow('delete', auth() != null && auth().roles == 'moderator')
+/// @@allow('all', auth().roles == 'moderator')
+/// @@allow('create,read', post.published)
 model Comment {
     id Int @id() @default(autoincrement())
     name String
