@@ -1,18 +1,6 @@
 # Redwood Tutorial App
 
-This repo represents the final state of the app created during the [Redwood Tutorial](https://redwoodjs.com/tutorial).
-It is meant to be a starting point for those working on the second half of the Tutorial, starting at the [Intermission](https://redwoodjs.com/docs/tutorial/intermission).
+This project demonstrates how to use [ZenStack](https://zenstack.dev) in a RedwoodJS project. It's extended based on the blog app used through [RedwoodJS's tutorial](https://redwoodjs.com/docs/tutorial/foreword).
 
-This repo contains much more styling than the one we built together in the tutorial, but is functionally identical.
+Please refer to [this blog post](https://zenstack.dev/blog/redwood-auth) for a general introduction.
 
-## Setup
-
-The [tutorial itself](https://redwoodjs.com/docs/tutorial/chapter1/prerequisites) contains instructions for getting this repo up and running, but here is a summary of the commands:
-
-```bash
-git clone https://github.com/redwoodjs/redwood-tutorial
-cd redwood-tutorial
-yarn install
-yarn rw prisma migrate dev
-yarn rw dev
-```
