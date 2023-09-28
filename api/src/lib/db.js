@@ -2,7 +2,7 @@
 // for options.
 
 import { PrismaClient } from '@prisma/client'
-import { withPolicy } from '@zenstackhq/runtime'
+import { enhance } from '@zenstackhq/runtime'
 
 import { emitLogLevels, handlePrismaLogging } from '@redwoodjs/api/logger'
 
@@ -19,8 +19,7 @@ export const db = new PrismaClient({
  * Returns ZenStack wrapped Prisma Client with access policies enabled.
  */
 export function authDb() {
-  console.log('Context User:', context.currentUser)
-  return withPolicy(db, { user: context.currentUser })
+  return enhance(db, { user: context.currentUser })
 }
 
 handlePrismaLogging({
